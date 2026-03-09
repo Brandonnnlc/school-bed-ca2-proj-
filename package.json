@@ -1,11 +1,16 @@
 {
   "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "readline-sync": "^1.4.10"
   },
   "name": "bed-prac-2",
   "version": "1.0.0",
-  "main": "w.js",
+  "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "web": "node server.js",
+    "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "brandon",

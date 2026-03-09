@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PKMN Master | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="glass-bg"></div>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <span class="icon">◒</span>
+                <h1>PKMN<span>Master</span></h1>
+            </div>
+            <div class="search-controls">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by name or type...">
+                    <button id="searchBtn">🔍</button>
+                </div>
+                <div class="filter-group">
+                    <select id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="grass">Grass</option>
+                        <option value="fire">Fire</option>
+                        <option value="water">Water</option>
+                        <option value="bug">Bug</option>
+                        <option value="normal">Normal</option>
+                        <option value="poison">Poison</option>
+                        <option value="electric">Electric</option>
+                        <option value="ground">Ground</option>
+                        <option value="fairy">Fairy</option>
+                        <option value="fighting">Fighting</option>
+                        <option value="psychic">Psychic</option>
+                        <option value="rock">Rock</option>
+                        <option value="ghost">Ghost</option>
+                        <option value="ice">Ice</option>
+                        <option value="dragon">Dragon</option>
+                    </select>
+                    <select id="sortOrder">
+                        <option value="id-asc">ID (Low-High)</option>
+                        <option value="id-desc">ID (High-Low)</option>
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+            <button id="openFormBtn" class="primary-btn">+ Add Pokemon</button>
+        </header>
+
+        <main>
+            <div id="pokemonGrid" class="pokemon-grid">
+                <!-- Pokemon cards will be injected here -->
+            </div>
+        </main>
+
+        <!-- Detail Modal -->
+        <div id="detailModal" class="modal-overlay">
+            <div class="modal-content detail-content">
+                <button class="close-btn" id="closeDetailBtn">×</button>
+                <div id="pokemonDetail">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for adding Pokemon -->
+        <div id="modalOverlay" class="modal-overlay">
+            <div class="modal-content">
+                <h2>Add New Pokemon</h2>
+                <form id="addPokemonForm">
+                    <div class="input-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" required placeholder="e.g. Pikachu">
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="type1">Type 1</label>
+                            <input type="text" id="type1" required placeholder="e.g. Electric">
+                        </div>
+                        <div class="input-group">
+                            <label for="type2">Type 2 (Optional)</label>
+                            <input type="text" id="type2" placeholder="e.g. Steel">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="closeFormBtn" class="secondary-btn">Cancel</button>
+                        <button type="submit" class="primary-btn">Save Pokemon</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
