@@ -126,6 +126,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function renderGrid(list) {
+        pokemonGrid.innerHTML = '';
+        if (list.length === 0) {
+            pokemonGrid.innerHTML = '<div class="no-results">No Pokemon found matching your criteria.</div>';
+            return;
+        }
+
+        list.forEach((pokemon, index) => {
+            const card = document.createElement('div');
+            card.className = 'pokemon-card';
+            card.style.opacity = '0';
+
+            const id = pokemon['#'] || '??';
+            const name = pokemon.Name;
+            const t1 = pokemon['Type 1'];
+            const t2 = pokemon['Type 2'];
+
+            card.innerHTML = `
+                <div class="id-tag">#${id.padStart(3, '0')}</div>
+                <h3>${name}</h3>
+                <div class="types">
+                    <span class="type-pill" data-type="${t1.toLowerCase()}">${t1}</span>
+                    ${t2 ? `<span class="type-pill" data-type="${t2.toLowerCase()}">${t2}</span>` : ''}
+                </div>
+            `;
+
+            card.addEventListener('click', () => showDetails(pokemon));
+            pokemonGrid.appendChild(card);
+
+            // GSAP Entry Animation
+            gsap.fromTo(card,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.5, delay: index * 0.05, ease: 'power2.out' }
+            );
+        });
+    }
+
     async function showDetails(pokemon) {
         pokemonDetail.innerHTML = '<div class="loading">Loading details...</div>';
         detailModal.style.display = 'flex';
