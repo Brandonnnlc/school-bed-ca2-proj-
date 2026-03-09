@@ -10,6 +10,8 @@
   [![License](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
   [Features](#-features) • [Installation](#-quick-start) • [Tech Stack](#-tech-stack) • [Screenshots](#-screenshots)
+
+  ### 🔗 [Live Demo](https://brandonnnlc.github.io/school-bed-ca2-proj-/)
 </div>
 
 ---
