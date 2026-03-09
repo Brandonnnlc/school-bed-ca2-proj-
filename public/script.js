@@ -55,44 +55,23 @@ document.addEventListener('DOMContentLoaded', () => {
         addPokemonForm.addEventListener('submit', handleFormSubmit);
     }
 
-    async function handleFormSubmit(e) {
-        e.preventDefault();
-        const pokemonData = {
-            Name: document.getElementById('name').value,
-            'Type 1': document.getElementById('type1').value,
-            'Type 2': document.getElementById('type2').value
-        };
-
-        try {
-            const response = await fetch('/api/pokemon', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(pokemonData)
-            });
-
-            if (response.ok) {
-                gsap.to(modalOverlay, {
-                    opacity: 0, duration: 0.2, onComplete: async () => {
-                        modalOverlay.style.display = 'none';
-                        addPokemonForm.reset();
-                        await fetchPokemon();
-                    }
-                });
-            }
-        } catch (error) {
-            console.error('Submit error:', error);
-        }
-    }
-
     // Core functions
     async function fetchPokemon() {
         try {
-            const response = await fetch('/api/pokemon');
-            pokemonList = await response.json();
+            // 1. Load default data
+            const response = await fetch('data/pokemon.json');
+            const defaultList = await response.json();
+
+            // 2. Load custom data from localStorage
+            const customList = JSON.parse(localStorage.getItem('customPokemon') || '[]');
+
+            // 3. Combine
+            pokemonList = [...defaultList, ...customList];
+
             filterAndRender();
         } catch (error) {
             console.error('Fetch error:', error);
-            pokemonGrid.innerHTML = '<p class="no-results">Failed to load Pokemon. Is the server running?</p>';
+            pokemonGrid.innerHTML = '<p class="no-results">Failed to load Pokemon. Is the repository structured correctly?</p>';
         }
     }
 
@@ -121,40 +100,29 @@ document.addEventListener('DOMContentLoaded', () => {
         renderGrid(filtered);
     }
 
-    function renderGrid(list) {
-        pokemonGrid.innerHTML = '';
-        if (list.length === 0) {
-            pokemonGrid.innerHTML = '<div class="no-results">No Pokemon found matching your criteria.</div>';
-            return;
-        }
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        const newPokemon = {
+            Name: document.getElementById('name').value,
+            'Type 1': document.getElementById('type1').value,
+            'Type 2': document.getElementById('type2').value
+        };
 
-        list.forEach((pokemon, index) => {
-            const card = document.createElement('div');
-            card.className = 'pokemon-card';
-            card.style.opacity = '0';
+        // Static auto-increment
+        const maxId = pokemonList.reduce((max, p) => Math.max(max, parseInt(p['#']) || 0), 0);
+        newPokemon['#'] = (maxId + 1).toString();
 
-            const id = pokemon['#'] || '??';
-            const name = pokemon.Name;
-            const t1 = pokemon['Type 1'];
-            const t2 = pokemon['Type 2'];
+        // Save to localStorage
+        const customList = JSON.parse(localStorage.getItem('customPokemon') || '[]');
+        customList.push(newPokemon);
+        localStorage.setItem('customPokemon', JSON.stringify(customList));
 
-            card.innerHTML = `
-                <div class="id-tag">#${id.padStart(3, '0')}</div>
-                <h3>${name}</h3>
-                <div class="types">
-                    <span class="type-pill" data-type="${t1.toLowerCase()}">${t1}</span>
-                    ${t2 ? `<span class="type-pill" data-type="${t2.toLowerCase()}">${t2}</span>` : ''}
-                </div>
-            `;
-
-            card.addEventListener('click', () => showDetails(pokemon));
-            pokemonGrid.appendChild(card);
-
-            // GSAP Entry Animation
-            gsap.fromTo(card,
-                { y: 30, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.5, delay: index * 0.05, ease: 'power2.out' }
-            );
+        gsap.to(modalOverlay, {
+            opacity: 0, duration: 0.2, onComplete: async () => {
+                modalOverlay.style.display = 'none';
+                addPokemonForm.reset();
+                await fetchPokemon();
+            }
         });
     }
 
@@ -164,17 +132,31 @@ document.addEventListener('DOMContentLoaded', () => {
         gsap.to(detailModal, { opacity: 1, duration: 0.3 });
 
         try {
-            const response = await fetch(`/api/pokemon/details/${encodeURIComponent(pokemon.Name)}`);
-            const details = await response.json();
+            // DIRECT POKEAPI CALL
+            const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.Name.toLowerCase()}`);
+            if (!response.ok) throw new Error('Not found');
+            const data = await response.json();
 
-            if (details.error) throw new Error(details.error);
+            const details = {
+                sprite: data.sprites.other['official-artwork'].front_default || data.sprites.front_default,
+                stats: data.stats.reduce((acc, s) => {
+                    acc[s.stat.name] = s.base_stat;
+                    return acc;
+                }, {}),
+                height: data.height,
+                weight: data.weight
+            };
 
             renderDetails(pokemon, details);
         } catch (error) {
             pokemonDetail.innerHTML = `
-                <div class="detail-header">
-                    <h3>${pokemon.Name}</h3>
-                    <p>Could not load extra data from PokeAPI.</p>
+                <div class="detail-header" style="flex-direction: column; padding: 5rem 2rem;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">${pokemon.Name}</h2>
+                    <div class="types" style="margin-bottom: 2rem;">
+                        <span class="type-pill" data-type="${pokemon['Type 1'].toLowerCase()}">${pokemon['Type 1']}</span>
+                        ${pokemon['Type 2'] ? `<span class="type-pill" data-type="${pokemon['Type 2'].toLowerCase()}">${pokemon['Type 2']}</span>` : ''}
+                    </div>
+                    <p style="color: var(--text-muted);">PokeAPI could not find data for this Pokemon.</p>
                 </div>
             `;
         }

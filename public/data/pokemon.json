@@ -1,0 +1,62 @@
+[
+    {
+        "#": "1",
+        "Name": "Bulbasaur",
+        "Type 1": "Grass",
+        "Type 2": "Poison"
+    },
+    {
+        "#": "2",
+        "Name": "Ivysaur",
+        "Type 1": "Grass",
+        "Type 2": "Poison"
+    },
+    {
+        "#": "3",
+        "Name": "Venusaur",
+        "Type 1": "Grass",
+        "Type 2": "Poison"
+    },
+    {
+        "#": "4",
+        "Name": "Charmander",
+        "Type 1": "Fire",
+        "Type 2": ""
+    },
+    {
+        "#": "5",
+        "Name": "Charmeleon",
+        "Type 1": "Fire",
+        "Type 2": ""
+    },
+    {
+        "#": "6",
+        "Name": "Charizard",
+        "Type 1": "Fire",
+        "Type 2": ""
+    },
+    {
+        "#": "7",
+        "Name": "Squirtle",
+        "Type 1": "Water",
+        "Type 2": ""
+    },
+    {
+        "#": "8",
+        "Name": "Wartortle",
+        "Type 1": "Water",
+        "Type 2": ""
+    },
+    {
+        "#": "9",
+        "Name": "Blastoise",
+        "Type 1": "Water",
+        "Type 2": ""
+    },
+    {
+        "#": "10",
+        "Name": "Pikachu",
+        "Type 1": "Electric",
+        "Type 2": ""
+    }
+]
